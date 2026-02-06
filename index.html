@@ -1,128 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Be My Valentine 💖</title>
-
-<style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #ff4d6d, #c9184a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    overflow: hidden;
-  }
-
-  .container {
-    background: #1b1b1b;
-    color: #fff;
-    width: 90%;
-    max-width: 360px;
-    border-radius: 25px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-  }
-
-  h1 {
-    color: #ff758f;
-    font-size: 24px;
-  }
-
-  p {
-    font-size: 15px;
-    color: #f1f1f1;
-  }
-
-  img.main {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 15px;
-    margin: 15px 0;
-  }
-
-  button {
-    padding: 12px 22px;
-    font-size: 16px;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-  }
-
-  #yesBtn {
-    background: #ff4d6d;
-    color: white;
-  }
-
-  #noBtn {
-    background: #6c757d;
-    color: white;
-    position: absolute;
-  }
-
-  .qr {
-    margin-top: 15px;
-    background: white;
-    padding: 10px;
-    border-radius: 15px;
-    display: inline-block;
-  }
-
-  .final {
-    font-size: 20px;
-    color: #ff8fab;
-    animation: pop 0.6s ease;
-  }
-
-  @keyframes pop {
-    from { transform: scale(0.5); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  .heart {
-    position: absolute;
-    color: #ff4d6d;
-    font-size: 20px;
-    animation: float 5s linear infinite;
-  }
-
-  @keyframes float {
-    0% { transform: translateY(100vh); opacity: 0; }
-    10% { opacity: 1; }
-    100% { transform: translateY(-10vh); opacity: 0; }
-  }
-</style>
-</head>
-
-<body>
-
-<audio id="music" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<div class="container" id="card">
-  <h1>Hey My Love 💖</h1>
-  <p>You make my world brighter every day</p>
-
-  <img src="photo1.jpg" class="main" id="slide">
-
-  <p>Will you be my Valentine? 💌</p>
-
-  <button id="yesBtn">Yes 💕</button>
-  <button id="noBtn">No 🙈</button>
-
-  <p style="margin-top:15px;">Scan this 💫</p>
-  <div class="qr">
-    <img id="qrCode">
-  </div>
-</div>
-
 <script>
+  // ===== CUSTOMIZE HERE =====
+  const HER_NAME = "Aishwarya";
+  const CORRECT_PASSWORD = "251225"; // 🔐 password updated
+
+  // Set glowing name
+  document.getElementById("name").innerText = HER_NAME;
+
+  function unlock() {
+    if (document.getElementById("password").value === CORRECT_PASSWORD) {
+      document.getElementById("lock").style.display = "none";
+      document.getElementById("main").style.display = "block";
+      document.getElementById("music").play();
+    } else {
+      alert("Wrong password 😜");
+    }
+  }
+
   // Slideshow
   const photos = ["photo1.jpg", "photo2.jpg", "photo3.jpg"];
   let i = 0;
@@ -131,17 +24,60 @@
     document.getElementById("slide").src = photos[i];
   }, 2500);
 
-  // Music
-  const music = document.getElementById("music");
-  document.body.addEventListener("click", () => music.play(), { once: true });
-
-  // Yes button
+  // YES button
   document.getElementById("yesBtn").onclick = () => {
-    document.getElementById("card").innerHTML = `
-      <h1 class="final">She said YES 💖</h1>
-      <p class="final">Best Valentine ever ✨</p>
+    startConfetti();
+    document.getElementById("main").innerHTML = `
+      <div id="memory">
+        <h1 class="glow">Aishwarya 💖</h1>
+
+        <div id="typing" style="
+          margin: 10px 0 15px;
+          font-size: 20px;
+          color: #ffb3c6;
+          min-height: 28px;
+          letter-spacing: 1px;
+        "></div>
+
+        <p>
+          This is my little secret for you.<br><br>
+          You make my heart smile in ways I never expected.<br>
+          I want to remember this moment forever ❤️
+        </p>
+
+        <button class="pink" onclick="saveMemory()">Save This Moment 📸</button>
+      </div>
     `;
+    typeLove();
   };
+
+  // 💫 Typing animation: "I love you"
+  const text = "I love you ❤️";
+  let t = 0;
+  function typeLove() {
+    const el = document.getElementById("typing");
+    if (!el) return;
+    el.innerHTML = "";
+    t = 0;
+    const timer = setInterval(() => {
+      el.innerHTML += text.charAt(t);
+      t++;
+      if (t === text.length) {
+        clearInterval(timer);
+        setTimeout(typeLove, 1800); // loop softly
+      }
+    }, 120);
+  }
+
+  // Screenshot
+  function saveMemory() {
+    html2canvas(document.getElementById("memory")).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "Aishwarya_Valentine_Memory.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
 
   // No button escape
   const noBtn = document.getElementById("noBtn");
@@ -160,12 +96,166 @@
     setTimeout(() => h.remove(), 5000);
   }, 400);
 
-  // QR Code (replace URL!)
-  const siteURL = "PASTE_YOUR_SITE_URL_HERE";
-  document.getElementById("qrCode").src =
-    "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" +
-    encodeURIComponent(siteURL);
-</script>
+  // 🎉 Confetti
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-</body>
-</html>
+  let confetti = [];
+
+  function startConfetti() {
+    for (let i = 0; i < 160; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        color: `hsl(${Math.random() * 360},100%,70%)`
+      });
+    }
+    requestAnimationFrame(drawConfetti);
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach((c, i) => {
+      ctx.beginPath();
+      ctx.fillStyle = c.color;
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fill();
+      c.y += 4;
+      if (c.y > canvas.height) confetti.splice(i, 1);
+    });
+    if (confetti.length) requestAnimationFrame(drawConfetti);
+  }
+</script><script>
+  // ===== CUSTOMIZE HERE =====
+  const HER_NAME = "Aishwarya";
+  const CORRECT_PASSWORD = "251225"; // 🔐 password updated
+
+  // Set glowing name
+  document.getElementById("name").innerText = HER_NAME;
+
+  function unlock() {
+    if (document.getElementById("password").value === CORRECT_PASSWORD) {
+      document.getElementById("lock").style.display = "none";
+      document.getElementById("main").style.display = "block";
+      document.getElementById("music").play();
+    } else {
+      alert("Wrong password 😜");
+    }
+  }
+
+  // Slideshow
+  const photos = ["photo1.jpg", "photo2.jpg", "photo3.jpg"];
+  let i = 0;
+  setInterval(() => {
+    i = (i + 1) % photos.length;
+    document.getElementById("slide").src = photos[i];
+  }, 2500);
+
+  // YES button
+  document.getElementById("yesBtn").onclick = () => {
+    startConfetti();
+    document.getElementById("main").innerHTML = `
+      <div id="memory">
+        <h1 class="glow">Aishwarya 💖</h1>
+
+        <div id="typing" style="
+          margin: 10px 0 15px;
+          font-size: 20px;
+          color: #ffb3c6;
+          min-height: 28px;
+          letter-spacing: 1px;
+        "></div>
+
+        <p>
+          This is my little secret for you.<br><br>
+          You make my heart smile in ways I never expected.<br>
+          I want to remember this moment forever ❤️
+        </p>
+
+        <button class="pink" onclick="saveMemory()">Save This Moment 📸</button>
+      </div>
+    `;
+    typeLove();
+  };
+
+  // 💫 Typing animation: "I love you"
+  const text = "I love you ❤️";
+  let t = 0;
+  function typeLove() {
+    const el = document.getElementById("typing");
+    if (!el) return;
+    el.innerHTML = "";
+    t = 0;
+    const timer = setInterval(() => {
+      el.innerHTML += text.charAt(t);
+      t++;
+      if (t === text.length) {
+        clearInterval(timer);
+        setTimeout(typeLove, 1800); // loop softly
+      }
+    }, 120);
+  }
+
+  // Screenshot
+  function saveMemory() {
+    html2canvas(document.getElementById("memory")).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "Aishwarya_Valentine_Memory.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
+
+  // No button escape
+  const noBtn = document.getElementById("noBtn");
+  noBtn.onmouseover = () => {
+    noBtn.style.left = Math.random() * 80 + "vw";
+    noBtn.style.top = Math.random() * 80 + "vh";
+  };
+
+  // Floating hearts
+  setInterval(() => {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "❤️";
+    h.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 5000);
+  }, 400);
+
+  // 🎉 Confetti
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let confetti = [];
+
+  function startConfetti() {
+    for (let i = 0; i < 160; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        color: `hsl(${Math.random() * 360},100%,70%)`
+      });
+    }
+    requestAnimationFrame(drawConfetti);
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach((c, i) => {
+      ctx.beginPath();
+      ctx.fillStyle = c.color;
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fill();
+      c.y += 4;
+      if (c.y > canvas.height) confetti.splice(i, 1);
+    });
+    if (confetti.length) requestAnimationFrame(drawConfetti);
+  }
+</script>
